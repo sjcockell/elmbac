@@ -1,5 +1,6 @@
 from elm import ELM, Sequences, Match
 import sys
+import xlwt
 
 def main(f):
 	e = ELM.ELM()
@@ -47,12 +48,41 @@ def getResultSet(sequences, elmMotifs):
 	return resultArray
 
 def printResultSet(r):
-	fh = open('outfile', 'w')
+#	fh = open('outfile', 'w')
+#	for line in r:
+#		for element in line:
+#			print str(element)+"\t",
+#		print
+#	close(fh)
+	wb = xlwt.Workbook()
+	ws = wb.add_sheet("Results")
+	row = 0
 	for line in r:
+		col = 0
 		for element in line:
-			print str(element)+"\t",
-		print
-	close(fh)
+			ws.write(row, col, element)
+			col += 1
+		row += 1
+	print row, col
+	for cell in range(1, col):
+		col = convertColumn(cell)
+		formula1 = "SUM("+col+"2:"+col+str(row)+")"
+		formula2 = "AVERAGE("+col+"2:"+col+str(row)+")"
+		ws.write(row, cell, xlwt.Formula(formula1))
+		ws.write(row+1, cell, xlwt.Formula(formula2))
+	wb.save("out.xls")
+
+def convertColumn(c):
+	letters = 'abcdefghijklmnopqrstuvwxyz'.upper()
+	if c > 25:
+		div = int(c/26)
+		letter1 = letters[div-1]
+		letter2 = letters[c-(26*div)]
+		return letter1+letter2
+	else:
+		return letters[c]
+
+
 
 if __name__ == '__main__':
 	try:
