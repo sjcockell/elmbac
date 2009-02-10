@@ -10,29 +10,34 @@ def main(f):
 	s.setIndexedSequenceLists()
 	list = s.getIndexedSequenceList()
 	elms = e.elmList
+	score = scoreSequences(list, elms['LIG_TRAF2_1'])
+	randScore = scoreSequences(getRandomSequences(list, 25), elms['LIG_TRAF2_1'])
+	picks = [score, randScore]
+	totals = [len(list), 25]
+	print r.prop_test(picks, totals)
 #	test(seqs, elms)
-	totalScores = []
-	avScores = []
-	for i in range(0, 1000):
-		randomList = getRandomSequences(list, 25)
-		score = scoreSequences(randomList, elms['LIG_TRAF2_1'])
-		totalScores.append(score)
+#	totalScores = []
+#	avScores = []
+#	for i in range(0, 1000):
+#		randomList = getRandomSequences(list, 25)
+#		score = scoreSequences(randomList, elms['LIG_TRAF2_1'])
+#		totalScores.append(score)
 	#print r.wilcox_test(totalScores)
 #	r.library('moments')
 #	r.kurtosis(totalScores)
 #	r.skewness(totalScores)
-	ttestResults = r.t_test(totalScores, conf_level=0.99)
-	mannWhitneyResults = r.wilcox_test(totalScores, conf_int='TRUE' ,conf_level=0.99)
-	summary = r.summary(totalScores)
+#	ttestResults = r.t_test(totalScores, conf_level=0.99)
+#	mannWhitneyResults = r.wilcox_test(totalScores, conf_int='TRUE' ,conf_level=0.99)
+#	summary = r.summary(totalScores)
 #	ttestResults = r.t_test(avScores, conf_level=0.99)
 #	mannWhitneyResults = r.wilcox_test(avScores, conf_int='TRUE' ,conf_level=0.99)
-	print "Mean:\t"+str(summary['Mean'])
-	print "T Conf:\t"+str(ttestResults['conf.int'])
-	print "MW Conf:\t"+str(mannWhitneyResults['conf.int'])
-	testList = getRandomSequences(list, 25)
-	testScore = scoreSequences(randomList, elms['LIG_TRAF2_1'])
+#	print "Mean:\t"+str(summary['Mean'])
+#	print "T Conf:\t"+str(ttestResults['conf.int'])
+#	print "MW Conf:\t"+str(mannWhitneyResults['conf.int'])
+#	testList = getRandomSequences(list, 25)
+#	testScore = scoreSequences(randomList, elms['LIG_TRAF2_1'])
 #	testAvScore = float(testScore)/10.0
-	print testScore
+#	print testScore
 	#	print str(k)+':'+str(summary[k])
 	#for k in ttestResults.keys():
 	#	print str(k)+':'+str(ttestResults[k])
@@ -56,7 +61,6 @@ def scoreSequences(list, elm):
 		m = Match.Match(seq, elm)
 		scoreArray.append(m.getNumberMatches())
 		score = score + m.getNumberMatches()
-	print scoreArray
 	return score
 
 def test(s, e):
