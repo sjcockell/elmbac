@@ -1,77 +1,52 @@
-from elm import ELM, Sequences, Match
+from elm import EColiELM, ELM, Sequences, Match
+import elmSearch
 import sys
-import xlwt
+from rpy import *
 
 def main(f):
 	e = ELM.ELM()
 	s = Sequences.Sequences(f)
+	ece = EColiELM.EColiELM()
 	seqs = s.sequenceList
 	elms = e.elmList
-	results = getResultSet(seqs, elms)
-	printResultSet(results)
+	results = elmSearch.getResultSet(seqs, elms)
+	stats = getStats(results, ece)
+	elmSearch.printResultSet(results, 'epec.xls', stats)
 
-def getResultSet(sequences, elmMotifs):
-	resultArray = []
-	sequenceNames = sequences.keys()
-	elmNames = elmMotifs.keys()
-	listTitles = elmNames[:]
-	listTitles.insert(0, '')
-	tupleTitles = tuple(listTitles)
-	resultArray.append(tupleTitles)
-	i = 1
-	for sequenceName in sequenceNames:
-		tempList = []
-		sequence = sequences[sequenceName]
-		tempList.append(sequenceName)
-		for elmName in elmNames:
-			elmMotif = elmMotifs[elmName]
-			matcher = Match.Match(sequence, elmMotif)
-			tempList.append(matcher.getNumberMatches())
-		tempTuple = tuple(tempList)
-		resultArray.append(tempTuple)
-		i += 1
-	return resultArray
-
-def printResultSet(r):
-	wb = xlwt.Workbook()
-	ws = wb.add_sheet("Results")
-	row = 0
-	for line in r:
-		col = 0
-		for element in line:
-			ws.write(row, col, element)
-			col += 1
-		row += 1
-	print row, col
-	for cell in range(1, col):
-		col = convertColumn(cell)
-		formula1 = "SUM("+col+"2:"+col+str(row)+")"
-		formula2 = "AVERAGE("+col+"2:"+col+str(row)+")"
-		ws.write(row, cell, xlwt.Formula(formula1))
-		ws.write(row+1, cell, xlwt.Formula(formula2))
-	wb.save("out.xls")
-
-def convertColumn(c):
-	letters = 'abcdefghijklmnopqrstuvwxyz'.upper()
-	if c > 25:
-		div = int(c/26)
-		letter1 = letters[div-1]
-		letter2 = letters[c-(26*div)]
-		return letter1+letter2
-	else:
-		return letters[c]
-
-
+def getStats(res, eColi):
+	statTotals = {}
+	geneTotal = 0
+	for number in range(1, len(res)):
+		geneTotal += 1
+		for index in range(1, len(res[number])):
+			try:
+				statTotals[res[0][index]] = statTotals[res[0][index]] + res[number][index]
+			except KeyError:
+				statTotals[res[0][index]] = 0 + res[number][index]
+	statKeys = statTotals.keys()
+	statKeys = sorted(statKeys)
+	print geneTotal, eColi.geneTotal
+	for key in statKeys:
+		numberTest = statTotals[key]
+		numberBack = eColi.elmList[key]
+		picks = [int(numberBack), numberTest]
+		totals = [eColi.geneTotal, geneTotal]
+		print picks
+		print totals
+		print r.prop_test(picks, totals)
 
 if __name__ == '__main__':
 	try:
-		organism = sys.argv[1]
+		comparator = sys.argv[1]
 	except IndexError:
-		print 'Usage: python elmSearch.py organismName'
+		print 'Usage: python elmSearch.py sequences'
 		print 'Where viable names are:'
-		print 'ecoli'
+		print 'epec'
 	else:
-		print organism
-		file = organism + '.fa'
-		main(file)
+		print comparator
+		if comparator == 'ecoli':
+			print 'You are comparing ecoli to ecoli, this seems a little fruitless, don\'t you think?'
+		else:
+			file = comparator + '.fa'
+			main(file)
 

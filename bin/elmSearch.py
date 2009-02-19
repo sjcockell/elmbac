@@ -8,13 +8,15 @@ def main(f):
 	seqs = s.sequenceList
 	elms = e.elmList
 	results = getResultSet(seqs, elms)
-	printResultSet(results)
+	printResultSet(results, 'out.xls')
 
 def getResultSet(sequences, elmMotifs):
 	resultArray = []
 	sequenceNames = sequences.keys()
+	sequenceNames = sorted(sequenceNames)
 	elmNames = elmMotifs.keys()
 	listTitles = elmNames[:]
+	listTitles = sorted(listTitles)
 	listTitles.insert(0, '')
 	tupleTitles = tuple(listTitles)
 	resultArray.append(tupleTitles)
@@ -32,7 +34,7 @@ def getResultSet(sequences, elmMotifs):
 		i += 1
 	return resultArray
 
-def printResultSet(r):
+def printResultSet(r, o, s=None):
 	wb = xlwt.Workbook()
 	ws = wb.add_sheet("Results")
 	row = 0
@@ -42,14 +44,17 @@ def printResultSet(r):
 			ws.write(row, col, element)
 			col += 1
 		row += 1
-	print row, col
+	ws.write(row, 0, 'Totals')
+	ws.write(row+1, 0, 'Averages')
 	for cell in range(1, col):
 		col = convertColumn(cell)
 		formula1 = "SUM("+col+"2:"+col+str(row)+")"
 		formula2 = "AVERAGE("+col+"2:"+col+str(row)+")"
 		ws.write(row, cell, xlwt.Formula(formula1))
 		ws.write(row+1, cell, xlwt.Formula(formula2))
-	wb.save("out.xls")
+	if s != None:
+		pass
+	wb.save(o)
 
 def convertColumn(c):
 	letters = 'abcdefghijklmnopqrstuvwxyz'.upper()
