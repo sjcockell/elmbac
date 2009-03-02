@@ -22,7 +22,7 @@ MOD_CK2_1	...([ST])..E
 MOD_WntLipid	[ETA](C)[QERK]..F...RWNC[ST]
 CLV_PCSK_FUR_1	R.[RK]R.
 LIG_COP1	[DE][DE]...VP[DE]
-LIG_CAP-Gly_1	[ed].{0,2}[ed].{0,2}[edq].{0,1}[YF]$
+LIG_CAP-Gly_1	[ED].{0,2}[ED].{0,2}[EDQ].{0,1}[YF]$
 LIG_APCC_KENbox_2	.KEN.
 LIG_BRCT_MDC1_1	.S..Y$
 CLV_PCSK_PC7_1	[R]...[KR]R.

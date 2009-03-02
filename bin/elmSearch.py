@@ -10,13 +10,25 @@ def main(f):
 	results = getResultSet(seqs, elms)
 	printResultSet(results, 'out.xls')
 
+def getSequenceStats(sequences):
+	freqs = {'A':0,'C':0,'D':0,
+	'E':0,'F':0,'G':0,'H':0,
+	'I':0,'K':0,'L':0,'M':0,
+	'N':0,'P':0,'Q':0,'R':0,
+	'S':0,'T':0,'V':0,'W':0,
+	'Y':0,}
+	for sequence in sequences:
+		for char in sequence:
+			freqs[char] += 1	
+	print freqs
+
 def getResultSet(sequences, elmMotifs):
 	resultArray = []
 	sequenceNames = sequences.keys()
 	sequenceNames = sorted(sequenceNames)
 	elmNames = elmMotifs.keys()
+	elmNames = sorted(elmNames)
 	listTitles = elmNames[:]
-	listTitles = sorted(listTitles)
 	listTitles.insert(0, '')
 	tupleTitles = tuple(listTitles)
 	resultArray.append(tupleTitles)
