@@ -4,7 +4,8 @@ from random import randrange
 from rpy import *
 
 def main(f):
-	e = ELM.ELM()
+	"""Pcik random sequences from wild type to match length of effector list"""
+    e = ELM.ELM()
 	s = Sequences.Sequences(f)
 	seqs = s.sequenceList
 	s.setIndexedSequenceLists()
