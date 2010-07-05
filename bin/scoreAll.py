@@ -30,8 +30,8 @@ def score_sequence(sequence):
         except KeyError:
             pass
     total = reduce(lambda x,y: x+y, tempList)
-    print sequence[0]+'\t'+str(total)+'\t'+str(total/len(sequence[1]))
-    return (sequence[0], total, total/len(sequence[1]))
+    print sequence[0]+'\t'+str(total)+'\t'+str(total/len(sequence[1]))+'\t'+str((total/len(sequence[1]))*total)
+    return (sequence[0], total, total/len(sequence[1]), (total/len(sequence[1]))*total)
 
 if __name__ == '__main__':
     try:
