@@ -1,17 +1,19 @@
 from elm import EColiELM, ELM, Sequences, Match
 import elmSearch
 import sys
+from optparse import OptionParser
 from rpy import *
 
-def main(f):
+def main(inf, outf):
 	e = ELM.ELM()
-	s = Sequences.Sequences(f)
+	s = Sequences.Sequences(inf)
 	ece = EColiELM.EColiELM()
 	seqs = s.sequenceList
 	elms = e.elmList
 	results = elmSearch.getResultSet(seqs, elms)
-	stats = getStats(results, ece)
-	elmSearch.printResultSet(results, 'epec.xls', stats)
+	#stats = getStats(results, ece)
+	stats = None
+	elmSearch.printResultSet(results, outf, stats)
 
 def getStats(res, eColi):
 	statTotals = {}
@@ -36,17 +38,27 @@ def getStats(res, eColi):
 		print r.prop_test(picks, totals)
 
 if __name__ == '__main__':
-	try:
-		comparator = sys.argv[1]
-	except IndexError:
-		print 'Usage: python elmSearch.py sequences'
-		print 'Where viable names are:'
-		print 'epec'
+	parser = OptionParser(usage="Usage: %prog [options] infile.fa outfile.xls",
+		version="%prog 0.2")
+	(options, args) = parser.parse_args()
+	if len(args) != 2:
+		print 'Usage error, you need to define an infile and an outfile'
+		parser.print_help()
 	else:
-		print comparator
-		if comparator == 'ecoli':
-			print 'You are comparing ecoli to ecoli, this seems a little fruitless, don\'t you think?'
-		else:
-			file = comparator + '.fa'
-			main(file)
+		infile = args[0]
+		outfile = args[1]
+		main(infile, outfile)
+	#try:
+	#	comparator = sys.argv[1]
+	#except IndexError:
+	#	print 'Usage: python elmSearch.py sequences'
+	#	print 'Where viable names are:'
+	#	print 'epec'
+	#else:
+	#	print comparator
+	#	if comparator == 'ecoli':
+	#		print 'You are comparing ecoli to ecoli, this seems a little fruitless, don\'t you think?'
+	#	else:
+	#		file = comparator + '.fa'
+	#		main(file)
 
